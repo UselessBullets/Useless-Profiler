@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "examplemod",
+  "id": "profiler",
   "version": "${version}",
 
   "name": "Example Mod",
@@ -18,11 +18,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-        "turniplabs.examplemod.ExampleMod"
+        "useless.profiler.Profiler"
     ]
   },
   "mixins": [
-      "examplemod.mixins.json"
+      "profiler.mixins.json"
   ],
 
   "depends": {
