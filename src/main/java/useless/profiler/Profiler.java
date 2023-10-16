@@ -15,7 +15,7 @@ public class Profiler implements ModInitializer {
 	public static boolean doProfiling = true;
 	public static int poolDelayTicks = 40;
 	public static String MOD_ID_TO_MEASURE = "Minecraft";
-	public static String METHOD_ID_TO_MEASURE = "worldTick";
+	public static String METHOD_ID_TO_MEASURE = "tick";
 	protected static HashMap<String, Long> ellapsedTime = new HashMap<>();
 	protected static HashMap<String, Long> startTimes = new HashMap<>();
 	protected static HashMap<String, Integer> methodCalls = new HashMap<>();
