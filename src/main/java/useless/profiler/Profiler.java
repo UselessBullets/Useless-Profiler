@@ -14,6 +14,8 @@ public class Profiler implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static boolean doProfiling = true;
 	public static int poolDelayTicks = 40;
+	public static String MOD_ID_TO_MEASURE = "Minecraft";
+	public static String METHOD_ID_TO_MEASURE = "worldTick";
 	protected static HashMap<String, Long> ellapsedTime = new HashMap<>();
 	protected static HashMap<String, Long> startTimes = new HashMap<>();
 	protected static HashMap<String, Integer> methodCalls = new HashMap<>();
@@ -29,8 +31,7 @@ public class Profiler implements ModInitializer {
 	/**
 	 * Returns the average time that the specified method takes to run in milliseconds
 	 */
-	@ApiStatus.Internal
-	public static float getAverageTime(String id){if (!doProfiling){
+	protected static float getAverageTime(String id){if (!doProfiling){
 		return -1;}
 		return ((float) ellapsedTime.get(id)) /methodCalls.get(id);
 	}
@@ -43,8 +44,7 @@ public class Profiler implements ModInitializer {
 	/**
 	 * Marks the start point of a specified method
 	 */
-	@ApiStatus.Internal
-	public static void methodStart(String id){
+	protected static void methodStart(String id){
 		if (!doProfiling){
 			return;}
 		if (id.length() > longestKey){
@@ -68,8 +68,7 @@ public class Profiler implements ModInitializer {
 	/**
 	 * Marks the end point of a specified method
 	 */
-	@ApiStatus.Internal
-	public static void methodEnd(String id){
+	protected static void methodEnd(String id){
 		if (!doProfiling){
 			return;}
 		int deltaTime = (int) (System.currentTimeMillis() - startTimes.get(id));
@@ -99,11 +98,14 @@ public class Profiler implements ModInitializer {
 	/**
 	 * Prints out each methods times in respect to the method provided
 	 */
-	public static void printTimesInRespectToID(String id){
+	protected static void printTimesInRespectToID(String id){
 		if (!doProfiling){
 			LOGGER.info("Cannot Print, profiling disabled!");
 			return;}
 		if (ellapsedTime.size() == 0) {return;}
+		if (ellapsedTime.get(id) == null){
+			LOGGER.info("ID currently returns Null");
+			return;}
 		long totalKeyTime = ellapsedTime.get(id);
 		StringBuilder builder = new StringBuilder("Function Times\n")
 			.append(StringUtils.rightPad("ID", longestKey)).append(" | ")
@@ -134,7 +136,18 @@ public class Profiler implements ModInitializer {
 		longestTimes.clear();
 		longestKey = 0;
 	}
-
+	public static HashMap<String, Integer> getLongestTimes(){
+		return longestTimes;
+	}
+	public static HashMap<String, Integer> getMethodCalls(){
+		return methodCalls;
+	}
+	public static HashMap<String, Long> getEllapsedTime(){
+		return ellapsedTime;
+	}
+	public static HashMap<String, Long> getStartTimes(){
+		return startTimes;
+	}
     @Override
     public void onInitialize() {
 		String s;

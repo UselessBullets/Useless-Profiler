@@ -17,16 +17,17 @@ public class MinecraftMixin {
 	@Inject(method = "runTick()V", at = @At("HEAD"))
 	private void checkProfileTimes(CallbackInfo ci){
 		if (ticksRan % Profiler.poolDelayTicks == 0){
-			Profiler.printTimesInRespectToID("Minecraft");
+			Profiler.printTimesInRespectToID(Profiler.MOD_ID_TO_MEASURE, Profiler.METHOD_ID_TO_MEASURE);
+			Profiler.getLongestTimes().clear();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) && Keyboard.isKeyDown(Keyboard.KEY_BACK)){
 			Profiler.LOGGER.info("CLEARING TIMES");
 			Profiler.clearTimes();
 		}
-		Profiler.methodStart("Minecraft");
+		Profiler.methodStart("Minecraft","tick");
 	}
 	@Inject(method = "runTick()V", at = @At("TAIL"))
 	private void tickEnd(CallbackInfo ci){
-		Profiler.methodEnd("Minecraft");
+		Profiler.methodEnd("Minecraft", "tick");
 	}
 }

@@ -4,7 +4,10 @@
   "package": "useless.profiler.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MinecraftMixin"
+    "ChunkGeneratorMixin",
+    "MinecraftMixin",
+    "RenderEngineMixin",
+    "WorldMixin"
   ],
   "client": [
   ],
