@@ -19,7 +19,7 @@ public class Profiler implements ModInitializer {
 	protected static HashMap<String, Long> ellapsedTime = new HashMap<>();
 	protected static HashMap<String, Long> startTimes = new HashMap<>();
 	protected static HashMap<String, Integer> methodCalls = new HashMap<>();
-	protected static HashMap<String, Integer> longestTimes = new HashMap<>();
+	protected static HashMap<String, Long> longestTimes = new HashMap<>();
 	private static int longestKey = 0;
 
 	/**
@@ -33,7 +33,7 @@ public class Profiler implements ModInitializer {
 	 */
 	protected static float getAverageTime(String id){if (!doProfiling){
 		return -1;}
-		return ((float) ellapsedTime.get(id)) /methodCalls.get(id);
+		return (((float) ellapsedTime.get(id)) /methodCalls.get(id))/1000000;
 	}
 	/**
 	 * Marks the start point of a specified method
@@ -50,7 +50,7 @@ public class Profiler implements ModInitializer {
 		if (id.length() > longestKey){
 			longestKey = id.length();
 		}
-		startTimes.put(id, System.currentTimeMillis());
+		startTimes.put(id, System.nanoTime());
 		ellapsedTime.putIfAbsent(id, 0L);
 		if (methodCalls.get(id) == null){
 			methodCalls.put(id, 1);
@@ -71,12 +71,12 @@ public class Profiler implements ModInitializer {
 	protected static void methodEnd(String id){
 		if (!doProfiling){
 			return;}
-		int deltaTime = (int) (System.currentTimeMillis() - startTimes.get(id));
+		Long deltaTime = (System.nanoTime() - startTimes.get(id));
 		ellapsedTime.put(id, (ellapsedTime.get(id) + deltaTime));
 		if (longestTimes.get(id) == null){
 			longestTimes.put(id, deltaTime);
 		} else {
-			int currentLongest = longestTimes.get(id);
+			Long currentLongest = longestTimes.get(id);
 			if (deltaTime > currentLongest){
 				longestTimes.put(id, deltaTime);
 			}
@@ -120,9 +120,9 @@ public class Profiler implements ModInitializer {
 				.append(StringUtils.rightPad(key, longestKey)).append(" | ")
 				.append(StringUtils.rightPad(String.format("%3.3f", percentage) +"%", 12)).append(" | ")
 				.append(StringUtils.rightPad(String.format("%.3f", getAverageTime(key)), 9)).append(" | ")
-				.append(StringUtils.rightPad(String.valueOf(ellapsedTime.get(key)), 12)).append(" | ")
+				.append(StringUtils.rightPad(String.valueOf(String.format("%.3f", ellapsedTime.get(key)/1000000f)), 12)).append(" | ")
 				.append(StringUtils.rightPad(String.valueOf(methodCalls.get(key)), 12)).append(" | ")
-				.append(StringUtils.rightPad(String.valueOf(longestTimes.get(key)), 12)).append("\n");
+				.append(StringUtils.rightPad(String.valueOf(String.format("%.3f", longestTimes.get(key)/1000000f)), 12)).append("\n");
 		}
 		LOGGER.info(builder.toString());
 	}
@@ -136,7 +136,7 @@ public class Profiler implements ModInitializer {
 		longestTimes.clear();
 		longestKey = 0;
 	}
-	public static HashMap<String, Integer> getLongestTimes(){
+	public static HashMap<String, Long> getLongestTimes(){
 		return longestTimes;
 	}
 	public static HashMap<String, Integer> getMethodCalls(){
