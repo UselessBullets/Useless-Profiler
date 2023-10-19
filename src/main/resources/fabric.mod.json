@@ -3,10 +3,10 @@
   "id": "profiler",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This mod aims to help new BTA modders.",
+  "name": "BTA Profile",
+  "description": "This mod aims to help BTA modders.",
   "authors": [
-    "Turnip Labs"
+    "Useless"
   ],
   "contact": {
     "homepage": "",
